@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Hans Aneiva</title>
+<link rel="preload" href="fig-base.webp" as="fetch" crossorigin="anonymous" fetchpriority="high">
 <meta name="description" content="Hans Aneiva. Me gusta convertir operaciones manuales en software que funciona solo.">
 <meta name="color-scheme" content="light">
 <meta property="og:type" content="website"><meta property="og:url" content="https://hansaneiva.dev/"><link rel="canonical" href="https://hansaneiva.dev/"><meta property="og:title" content="Hans Aneiva">
@@ -73,6 +74,9 @@ b,strong{font-weight:600}
 .film.live .film-c{opacity:1}
 .film:not(.live) .film-map{opacity:0!important}
 .film-c{transition:opacity .2s linear}
+.film{isolation:isolate;background:#fff}
+.film-v{position:absolute;left:0;top:0;width:778px;height:2344px;max-width:none;max-height:none;margin:0;transform-origin:0 0;will-change:transform;opacity:0;pointer-events:none;transition:opacity .2s linear}
+.film.vid .film-v{opacity:1}
 .film-fade{position:absolute;left:0;right:0;top:79.17%;bottom:0;background:linear-gradient(to bottom,rgba(255,255,255,0),#fff 25%);pointer-events:none}
 .film-col{position:relative;width:min(100%,470px);margin-inline:auto}
 .film-head{display:none}
@@ -401,6 +405,7 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
       <div class="film">
         <img class="film-p" src="figura-poster.jpg" width="1080" height="1920" data-alt-es="Diagrama animado del método de desarrollo, en siete niveles: requisitos, contrato, contexto y reglas, agentes paralelos, verificación, revisión y producción" data-alt-en="Animated diagram of the development method, in seven levels: requirements, contract, context and rules, parallel agents, verification, review and production" alt="Diagrama animado del método de desarrollo, en siete niveles: requisitos, contrato, contexto y reglas, agentes paralelos, verificación, revisión y producción">
         <canvas class="film-c" aria-hidden="true"></canvas>
+        <video class="film-v" muted playsinline webkit-playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback x-webkit-airplay="deny" aria-hidden="true" tabindex="-1"><source src="fig.mp4" type="video/mp4"><source src="fig.webm" type="video/webm"></video>
         <div class="film-fade" aria-hidden="true"></div>
         <ol class="film-map" aria-hidden="true"><li style="top:6.95%"><i>01</i><span lang="es">requisitos</span><span lang="en">requirements</span></li><li style="top:18.5%"><i>02</i><span lang="es">contrato</span><span lang="en">contract</span></li><li style="top:30.0%"><i>03</i><span lang="es">contexto y reglas</span><span lang="en">context and rules</span></li><li style="top:41.5%"><i>04</i><span lang="es">agentes paralelos</span><span lang="en">parallel agents</span></li><li style="top:53.05%"><i>05</i><span lang="es">verificación</span><span lang="en">verification</span></li><li style="top:64.6%"><i>06</i><span lang="es">revisión</span><span lang="en">review</span></li><li style="top:76.1%"><i>07</i><span lang="es">producción</span><span lang="en">production</span></li></ol>
         <div class="film-cap"><p class="film-k"><i>01</i><b><span lang="es">requisitos</span><span lang="en">requirements</span></b></p><p class="film-s"><span lang="es">El trabajo empieza como información sin estructura.</span><span lang="en">Work starts as unstructured input.</span></p></div>
@@ -532,10 +537,10 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
   var film=document.querySelector('.film');
   try{ if(film){ var cv=film.querySelector('.film-c'),ctx=cv.getContext('2d'),kn=film.querySelector('.film-k i'),kt=film.querySelector('.film-k b'),ks=film.querySelector('.film-s'),map=film.querySelector('.film-map'),
       track=document.querySelector('.film-track'),pin=document.querySelector('.film-pin'),skip=document.querySelector('.film-skip'),hint=document.querySelector('.film-hint'),segs=[].slice.call(document.querySelectorAll('.film-bar button')),
-      NF=180,NB=6,LPS=6,CAP=8,SD=202.5,U0=-1.96,V0=-1.22,MW=777,MH=2343,NS=8,
+      NF=180,LPS=6,SD=202.5,U0=-1.96,V0=-1.22,MW=777,MH=2343,NS=8,
       F=[.07,1.03,2.02,3.03,4.03,3.5,5.02,5.53,5.53],SEGA=[0,1,2,3,4,6,7,8],SEGL=[1,1,1,1,2,1,1,1],
-      cur=0,raf=0,last=0,tl=0,sp=0,sv=0,bar=0,shown=-1,drawnS=-1,painted=-1,pend=0,running=false,still=false,
-      blobs=new Array(NF),have=new Uint8Array(NF),cache={},keys=[],useBM=typeof createImageBitmap==='function',
+      cur=0,raf=0,last=0,tl=0,sp=0,sv=0,bar=0,shown=-1,drawnS=-1,painted=-1,running=false,still=false,
+      have=new Uint8Array(NF),keys=[],useBM=typeof createImageBitmap==='function',
       CAPS={en:[['01','requirements','Work starts as unstructured input.'],['02','contract','Acceptance criteria are written first. Each one becomes a test before any code exists.'],['03','context and rules','Repository rules constrain every agent. Each past failure added one.'],['04','parallel agents','Agents work in isolated environments and run the app before handing off.'],['05','verification','Three gates: automated tests, an evaluator agent that did not write the code, and evals.'],['05','verification','A failed change returns to its agent and adds a rule upstream.'],['06','review','I review every change that clears the three gates.'],['07','production','Production signals feed back as new requirements.'],['','system','Two feedback loops: one fixes the change, the other hardens the system.']],
         es:[['01','requisitos','El trabajo empieza como información sin estructura.'],['02','contrato','Los criterios de aceptación se escriben primero. Cada uno se vuelve una prueba antes del código.'],['03','contexto y reglas','Las reglas del repositorio limitan a cada agente. Cada falla pasada agregó una.'],['04','agentes paralelos','Los agentes trabajan en entornos aislados y ejecutan la aplicación antes de entregar.'],['05','verificación','Tres controles: pruebas automatizadas, un agente evaluador que no escribió el código y evals.'],['05','verificación','Un cambio que falla vuelve a su agente y agrega una regla más arriba.'],['06','revisión','Reviso cada cambio que pasa los tres controles.'],['07','producción','Las señales de producción vuelven como nuevos requisitos.'],['','sistema','Dos ciclos de retroalimentación: uno corrige el cambio y el otro refuerza el sistema.']]},
       UI={en:{skip:'Skip',replay:'Replay',go:'Go to ',bar:'Stages'},es:{skip:'Saltar',replay:'Repetir',go:'Ir a ',bar:'Etapas'}},
@@ -544,26 +549,68 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
     // camera for a stop position s (0 = first level … NS = whole system), as the film's own camera would frame it
     var camOf=function(s){var i=Math.min(NS-1,Math.floor(s)),w=s>=NS?1:s-i,f=F[i]+(F[i+1]-F[i])*w,o=i===NS-1?w:0,
         c0=680+300*(clamp(f)-1)+220*Math.min(1.6,Math.max(0,f-4));return{S:270-124*o,cx:540-70*o,cy:c0+(815-c0)*o,fy:(f+(3-f)*o)*1.515544,o:o}};
-    // frames stay compressed; only the next few are kept decoded
-    var bmFail=0,okAny=false,bad=new Uint8Array(NF),lose=function(){},
-      drop=function(b){try{if(b.close)b.close();else{URL.revokeObjectURL(b._u);b.src=''}}catch(e){}};
-    var evict=function(f){while(keys.length>CAP){var far=-1,fd=-1,i,d;for(i=0;i<keys.length;i++){if(keys[i]===shown)continue;d=ahead(keys[i],f);if(d>fd){fd=d;far=i}}if(far<0)return;var k=keys.splice(far,1)[0],b=cache[k];delete cache[k];drop(b)}};
-    // every decode settles exactly once (result, error or timeout), so the pending count can never leak and block later frames
-    var decode=function(s,f){if(!have[s]||cache[s]||pend>=4)return;cache[s]=1;pend++;var bm=useBM,blob=blobs[s],im=null,over=false,
-        done=function(d){if(over){if(d)drop(d);return}over=true;clearTimeout(tm);pend--;
-          if(d){cache[s]=d;keys.push(s);bad[s]=0;okAny=true;if(bm)bmFail=0;evict(f)}else{delete cache[s];if(++bad[s]>=3){bad[s]=0;if(okAny)lose(s)}}},
-        tm=setTimeout(function(){if(bm&&++bmFail>=3)useBM=false;if(im)drop(im);done(null)},4000);
-      try{if(bm)createImageBitmap(blob).then(done,function(){useBM=false;done(null)});
-        else{im=new Image();var ok=function(){if(im.naturalWidth)done(im);else no()},no=function(){if(!over&&im.complete&&im.naturalWidth)return done(im);drop(im);done(null)};
+    // Frames: one static base picture, and for each frame only the rectangles that differ from it (patches, packed into atlases).
+    // Frame f = base + patches(f), so any frame can be shown on its own. One offscreen canvas holds the composited frame: to move to
+    // another frame, the rectangles of the one shown are restored from the base and those of the new one are copied in, unscaled.
+    // Nothing is decoded per frame: each atlas (3 frames) is decoded once, ahead of the clock, and dropped behind it; its bytes are
+    // kept, so it is decoded again when the loop comes back to it.
+    var BUILD='2026-11-16 23:19:22Z',DIAG=/[?&]diag\b/.test(location.search),FOF=[1,5,2,4,3,6],SPAN=18,NAT=NF/SPAN,AT={},FR=new Array(NF),bmFail=0,pend=0,okAny=false,lastErr='',nRetry=0,nWd=0,
+      baseBlob=null,baseBM=null,baseP=false,baseBad=0,
+      drop=function(b){try{if(b.close)b.close();else{URL.revokeObjectURL(b._u);b.src=''}}catch(e){}},
+      err=function(e){lastErr=String((e&&e.message)||e||'error').slice(0,80)};
+    // every decode settles exactly once (image, failure or timeout), so the pending count can never leak and block later decodes
+    var dec=function(blob,cb){var bm=useBM,im=null,over=false;pend++;
+      var done=function(d){if(over){if(d)drop(d);return}over=true;clearTimeout(tm);pend--;if(d&&bm)bmFail=0;try{cb(d)}catch(e){err(e)}},
+        tm=setTimeout(function(){err('decode timeout');if(bm&&++bmFail>=3)useBM=false;if(im)drop(im);done(null)},4000);
+      try{if(bm)createImageBitmap(blob).then(done,function(e){err(e);useBM=false;done(null)});
+        else{im=new Image();var ok=function(){if(im.naturalWidth)done(im);else no()},no=function(){if(!over&&im.complete&&im.naturalWidth)return done(im);err('image decode');drop(im);done(null)};
           im._u=URL.createObjectURL(blob);im.src=im._u;if(im.decode)im.decode().then(ok,no);else{im.onload=ok;im.onerror=no}}}
-      catch(e){if(bm)useBM=false;done(null)}};
+      catch(e){err(e);if(bm)useBM=false;done(null)}};
+    var decBase=function(){if(!baseBlob||baseBM||baseP)return;baseP=true;
+      dec(baseBlob,function(d){baseP=false;if(d){baseBM=d;inval=true;okAny=true}else if(++baseBad>=3){baseBad=0;baseBlob=null;got[0]=0;kick()}})};
+    // the first use of a decoded image may upload it to the GPU: do that now, outside the frame path (one pixel in, restored at once)
+    var warm=function(d){try{if(cc&&baseBM&&!inval){cc.drawImage(d,0,0,1,1,0,0,1,1);cc.drawImage(baseBM,0,0,1,1,0,0,1,1)}}catch(e){}};
+    var dropA=function(a){if(!a.bm)return;drop(a.bm);a.bm=null;var i=keys.indexOf(a.k);if(i>=0)keys.splice(i,1)};
+    // an atlas that keeps failing to decode is fetched again
+    var loseA=function(a){dropA(a);a.dead=true;delete AT[a.k];a.fr.forEach(function(f){if(FR[f]&&FR[f].a===a){FR[f]=null;have[f]=0}});got[a.file]=0;kick()};
+    var decA=function(a){if(a.bm||a.pend||pend>=3)return;a.pend=true;
+      dec(a.blob,function(d){a.pend=false;if(d){if(a.dead){drop(d);return}a.bm=d;keys.push(a.k);a.bad=0;okAny=true;warm(d)}else if(++a.bad>=3){a.bad=0;if(okAny)loseA(a)}})};
+    // the atlas indices that hold frames f+lo … f+hi
+    var win=function(f,lo,hi){var a=Math.floor((((f+lo)%NF)+NF)%NF/SPAN),b=Math.floor((((f+hi)%NF)+NF)%NF/SPAN),o=[a];while(a!==b){a=(a+1)%NAT;o.push(a)}return o};
+    var pump=function(f){decBase();var need=win(f,-5,10),keep=win(f,-5,14),j,k,a;
+      for(j=0;j<need.length;j++)for(k=1;k<7;k++){a=AT[k*16+need[j]];if(a)decA(a)}
+      for(j=keys.length-1;j>=0;j--){a=AT[keys[j]];if(a&&keep.indexOf(a.i)<0)dropA(a)}};
+    var comp=document.createElement('canvas'),cc=null,compF=-1,CL=[],CW=[0,0,0,0],inval=true,drawn=false,M=96;comp.width=MW;comp.height=MH;
+    // the part of the picture the camera sees, in picture pixels
+    var view=function(){var c=camOf(sp),sw=1080/c.S*SD,sh=1920/c.S*SD,sx=(-c.cx/c.S-U0)*SD,sy=(-c.cy/c.S+c.fy-V0)*SD;return[Math.max(0,sx),Math.max(0,sy),Math.min(MW,sx+sw),Math.min(MH,sy+sh)]},
+      out=function(w,x,y,a,b){return x>=w[2]||y>=w[3]||x+a<=w[0]||y+b<=w[1]},
+      inside=function(v,w){return v[0]>=w[0]&&v[1]>=w[1]&&v[2]<=w[2]&&v[3]<=w[3]};
+    // Only what the camera sees (plus a margin) is kept up to date: rectangles out of view keep whatever they held and are restored
+    // when they come into view. CL lists every rectangle that differs from the base, as x,y,w,h.
+    var compose=function(g){var i,j,r=g>=0?FR[g].r:null,b=r&&FR[g].a.bm,x,y,w,h,v=view(),k=[],cw=[v[0]-M,v[1]-M,v[2]+M,v[3]+M],cov;
+      if(!cc)cc=comp.getContext('2d',{alpha:false})||comp.getContext('2d');
+      if(inval){cc.drawImage(baseBM,0,0);inval=false;CL=[]}
+      for(i=0;i<CL.length;i+=4){x=CL[i];y=CL[i+1];w=CL[i+2];h=CL[i+3];
+        if(out(cw,x,y,w,h)){k.push(x,y,w,h);continue}
+        cov=false;if(r)for(j=0;j<r.length;j+=6)if(r[j+2]<=x&&r[j+3]<=y&&r[j+2]+r[j+4]>=x+w&&r[j+3]+r[j+5]>=y+h){cov=true;break}   // the new frame overwrites it anyway
+        if(!cov)cc.drawImage(baseBM,x,y,w,h,x,y,w,h)}
+      if(r)for(i=0;i<r.length;i+=6){x=r[i+2];y=r[i+3];w=r[i+4];h=r[i+5];if(out(cw,x,y,w,h))continue;cc.drawImage(b,r[i],r[i+1],w,h,x,y,w,h);k.push(x,y,w,h)}
+      CL=k;CW=cw;compF=g;drawn=true};
     var size=function(){var w=film.clientWidth,h=film.clientHeight;if(!w||!h)return;var W=Math.min(1080,Math.round(w*Math.min(window.devicePixelRatio||1,3))),H=Math.round(W*h/w);if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H;drawnS=-1}};
-    var render=function(){var f=Math.floor(tl*30)%NF,i,best=-1,bd=1e9,d;
-      for(i=0;i<keys.length;i++){d=ahead(f,keys[i]);if(d<bd){bd=d;best=keys[i]}}                       // the decoded frame at or closest behind the clock
-      if(best>=0&&(best!==shown||sp!==drawnS)&&(shown<0||best===shown||!cache[shown]||bd<=ahead(f,shown))){var c=camOf(sp),W=cv.width,H=cv.height,sw=1080/c.S*SD,sh=1920/c.S*SD,sx=(-c.cx/c.S-U0)*SD,sy=(-c.cy/c.S+c.fy-V0)*SD,
+    // the frame on screen is the clock's frame, or the nearest earlier one that is ready (at most 5 frames back); it never steps back in time
+    var chg=[],gapMax=0,lastChg=0,render=function(){var f=Math.floor(tl*30)%NF,i,d,g=-1,p,was=compF;
+      try{if(baseBM){
+        for(d=0;d<6;d++){i=(f-d+NF)%NF;p=FR[i];if(p&&p.a.bm){g=i;break}}
+        if(g>=0&&g!==compF&&!(compF>=0&&!inval&&ahead(f,compF)<ahead(f,g)))compose(g);
+        else if(inval)compose(-1);
+        else if(drawn&&!inside(view(),CW)&&(compF<0||(FR[compF]&&FR[compF].a.bm)))compose(compF)}            // the camera reached what is not up to date
+      if(drawn&&(compF!==shown||sp!==drawnS||was!==compF)){var c=camOf(sp),W=cv.width,H=cv.height,sw=1080/c.S*SD,sh=1920/c.S*SD,sx=(-c.cx/c.S-U0)*SD,sy=(-c.cy/c.S+c.fy-V0)*SD,
           x0=Math.max(0,sx),y0=Math.max(0,sy),x1=Math.min(MW,sx+sw),y1=Math.min(MH,sy+sh);
-        try{ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);if(x1>x0&&y1>y0)ctx.drawImage(cache[best],x0,y0,x1-x0,y1-y0,(x0-sx)/sw*W,(y0-sy)/sh*H,(x1-x0)/sw*W,(y1-y0)/sh*H);shown=best;drawnS=sp;film.classList.add('live')}catch(e){}}
-      for(i=0;i<6;i++)decode((f+i)%NF,f)};
+        ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);if(x1>x0&&y1>y0)ctx.drawImage(comp,x0,y0,x1-x0,y1-y0,(x0-sx)/sw*W,(y0-sy)/sh*H,(x1-x0)/sw*W,(y1-y0)/sh*H);
+        if(DIAG&&compF!==shown&&compF>=0){var t=performance.now();if(lastChg&&go)gapMax=Math.max(gapMax,t-lastChg);lastChg=go?t:0;chg.push(t)}
+        shown=compF;drawnS=sp;film.classList.add('live')}}
+      catch(e){err(e);inval=true}
+      pump(f)};
     function setCap(i){var c=CAPS[lng()][i];kn.textContent=c[0];kt.textContent=c[1];ks.textContent=c[2]}
     var skipKey='',fbar=document.querySelector('.film-bar');
     relabel=function(){var L=lng(),u=UI[L];setCap(cur);if(skipKey)skip.textContent=u[skipKey];if(fbar)fbar.setAttribute('aria-label',u.bar);
@@ -574,18 +621,49 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
       map.style.opacity=eio((camOf(sp).o-.6)/.4);
       segs.forEach(function(b,n){b.firstChild.style.transform='scaleX('+clamp((sb-SEGA[n])/SEGL[n])+')'})}
     var failed=false,onFail=function(){};
-    // each bundle is a WebP file (a small cover frame) that carries one second of frames in an extra RIFF chunk.
-    // Bundles are streamed one at a time in playback order: each frame is usable as soon as its bytes arrive. A bundle that fails, stalls or
-    // returns an error is retried with backoff for as long as the page is open, and at once on 'online', on return to the page and on bfcache restore.
-    var got=new Uint8Array(NB),att=new Uint8Array(NB),sizes=[],EST=1.6e6,busy=-1,curL=0,ctl=null,retryT=0,BYT=0,ACT=0,rate=0,nFail=0,fail1=0,go=false,STALL=12000,hidT=0,
-      giveUp=function(){if(!failed&&nFail>=4&&Date.now()-fail1>=15000){for(var q=0;q<NF;q++)if(have[q])return;failed=true;try{onFail()}catch(e){}}};
-    var parser=function(i){var o=12,c=-1,j=0,off=0,base=0;
-      return function(u,L,fin){var rd=function(p){return(u[p]|u[p+1]<<8|u[p+2]<<16|u[p+3]<<24)>>>0},q,len;
-        while(c<0){if(o+12>L){if(fin)throw 0;return}
-          if(u[o]===72&&u[o+1]===65&&u[o+2]===70&&u[o+3]===49){c=rd(o+8);base=o+12;off=base+c*8;if(c<1||c>NF)throw 0}else{q=rd(o+4);o+=8+q+(q&1)}}
-        if(off>L){if(fin)throw 0;return}
-        for(;j<c;j++){q=rd(base+j*8);len=rd(base+4+j*8);if(q>=NF)throw 0;if(off+len>L){if(fin)throw 0;return}
-          if(!have[q]){blobs[q]=new Blob([u.subarray(off,off+len)],{type:'image/webp'});have[q]=1}off+=len}}};
+    // The loop is a real <video> (decoded by the device's hardware) laid over the canvas, which keeps the still with the camera.
+    // The video is shown only once it is really presenting frames. The patch player below is only the fallback for a video that
+    // cannot be used (error, or no playable source); a refused autoplay keeps the still and retries on the first gesture.
+    var v=film.querySelector('.film-v'),vCan=function(t){try{return v.canPlayType(t)}catch(e){return ''}},
+      vmode=(!v||(!vCan('video/mp4')&&!vCan('video/webm')))?'patch':'still',vRef=false,vShown=false,vCb=false,nRej=0,lastRej='',nWait=0,nVwd=0,vErr=0,vT=-1,vTt=0,vNs=0,vTf='',gest=false,
+      vPlay=function(){if(!v||vmode==='patch'||reduce)return;try{v.muted=true;v.defaultMuted=true;v.playsInline=true;var p=v.play();
+          if(p&&p.then)p.then(function(){vRef=false},function(e){nRej++;lastRej=(e&&e.name)||'error';if(lastRej==='NotAllowedError'){vRef=true;vGest()}})}catch(e){nRej++;lastRej=(e&&e.name)||'error'}},
+      vGest=function(){if(gest)return;gest=true;var h=function(){if(vRef&&vmode!=='patch')vPlay()};
+        ['touchend','click','keydown'].forEach(function(n){document.addEventListener(n,h,{capture:true,passive:true})})},
+      vShow=function(){vCb=false;if(vShown||vmode==='patch'||!v||v.paused||!(v.currentTime>0))return;vShown=true;vmode='video';film.classList.add('vid')},
+      vChk=function(){if(vShown||vCb||!v||v.paused||!(v.currentTime>0))return;if(v.requestVideoFrameCallback){vCb=true;v.requestVideoFrameCallback(vShow)}else vShow()},
+      vBad=function(){if(vmode==='patch')return;vErr=(v&&v.error&&v.error.code)||-1;vmode='patch';vShown=false;film.classList.remove('vid');
+        if(v){try{v.pause()}catch(e){}v.style.display='none'}kick()},
+      vRun=function(){if(v&&vmode!=='patch'&&!vRef)vPlay()},vStop=function(){if(v&&vmode!=='patch'&&!v.paused)try{v.pause()}catch(e){}},
+      // the camera crop (sx,sy,sw,sh) of the frame, shown in the film's box: the video is moved and scaled instead of drawn
+      vPlace=function(){if(!v||vmode==='patch')return;var w=film.clientWidth,h=film.clientHeight;if(!w||!h)return;
+        var c=camOf(sp),sw=1080/c.S*SD,sh=1920/c.S*SD,sx=(-c.cx/c.S-U0)*SD,sy=(-c.cy/c.S+c.fy-V0)*SD,kx=w/sw,ky=h/sh,
+          t='translate3d('+(-sx*kx).toFixed(3)+'px,'+(-sy*ky).toFixed(3)+'px,0) scale('+kx.toFixed(6)+','+ky.toFixed(6)+')';
+        if(t!==vTf){vTf=t;v.style.transform=t}};
+    if(v&&vmode==='patch')v.style.display='none';
+    // Seven files, loaded one at a time: the base, then the patches in six files that each span the whole loop (a0 = every 6th frame,
+    // 5 fps; with a1 and a2, 15 fps; with b0, b1 and b2, 30 fps). Inside a file the atlases come in playback order and each one is
+    // usable as soon as its bytes arrive. A file that fails, stalls or returns an error is retried with backoff for as long as the page
+    // is open, and at once on 'online', on return to the page and on bfcache restore.
+    var NAMES=['base','a0','a1','a2','b0','b1','b2'],NFL=7,got=new Uint8Array(NFL),att=new Uint8Array(NFL),sizes=[58818, 1055468, 1053788, 1058184, 1058936, 1061306, 1062134],
+      busy=-1,curL=0,ctl=null,retryT=0,BYT=0,ACT=0,rate=0,nFail=0,fail1=0,go=false,STALL=12000,hidT=0,
+      none=function(){if(baseBlob)return false;for(var q=0;q<NF;q++)if(have[q])return false;return true},
+      giveUp=function(){if(!failed&&nFail>=4&&Date.now()-fail1>=15000&&none()){failed=true;try{onFail()}catch(e){}}};
+    var parser=function(fi){var o=12,c=-1,p=0,j=0;
+      return function(u,L,fin){if(!fi){if(fin){baseBlob=new Blob([u.subarray(0,L)],{type:'image/webp'});decBase()}return}
+        var r32=function(q){return(u[q]|u[q+1]<<8|u[q+2]<<16|u[q+3]<<24)>>>0},r16=function(q){return u[q]|u[q+1]<<8},
+          short=function(){if(fin)throw new Error('truncated '+NAMES[fi])},q,len,nf,h,m,x,b,ff,nr,R,fr,rs,dx,dy,key,a;
+        while(c<0){if(o+10>L)return short();
+          if(u[o]===72&&u[o+1]===65&&u[o+2]===68&&u[o+3]===49){c=r16(o+8);p=o+10;if(c<1||c>NAT)throw new Error('format')}else{q=r32(o+4);o+=8+q+(q&1)}}
+        for(;j<c;j++){if(p+6>L)return short();len=r32(p);nf=r16(p+4);h=p+6;fr=[];rs=[];
+          for(m=0;m<nf;m++){if(h+4>L)return short();ff=r16(h);nr=r16(h+2);h+=4;if(h+nr*8>L)return short();if(ff>=NF)throw new Error('format');R=new Int16Array(nr*6);
+            for(x=0;x<nr;x++){b=h+x*8;dx=u[b+4]*16;dy=u[b+5]*16;R[x*6]=r16(b);R[x*6+1]=r16(b+2);R[x*6+2]=dx;R[x*6+3]=dy;R[x*6+4]=Math.min(u[b+6]*16,MW-dx);R[x*6+5]=Math.min(u[b+7]*16,MH-dy)}
+            h+=nr*8;fr.push(ff);rs.push(R)}
+          if(h+len>L)return short();
+          key=fi*16+Math.floor(fr[0]/SPAN);
+          if(!AT[key]){a={k:key,file:fi,i:Math.floor(fr[0]/SPAN),blob:new Blob([u.subarray(h,h+len)],{type:'image/webp'}),bm:null,pend:false,bad:0,fr:fr};AT[key]=a;
+            for(m=0;m<nf;m++){FR[fr[m]]={a:a,r:rs[m]};have[fr[m]]=1}}
+          p=h+len}}};
     var fetchB=function(i){return new Promise(function(res,rej){var ac=null,dead=false,st=0,u=null,L=0,p=parser(i),tp=Date.now(),streamed=false;
       try{ac=new AbortController()}catch(e){}
       var end=function(e){if(dead)return;dead=true;clearTimeout(st);if(ctl&&ctl.ac===ac)ctl=null;if(e){try{if(ac)ac.abort()}catch(x){}rej(e)}else res()},
@@ -594,39 +672,54 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
             if(L+ch.length>u.length){var n=new Uint8Array(Math.max(L+ch.length,u.length*1.5|0));n.set(u.subarray(0,L));u=n}u.set(ch,L);L+=ch.length;curL=L}
           p(u,L,!!fin);if(streamed&&!fin)arm(STALL)};
       ctl={ac:ac,end:end};arm(15000);
-      fetch('loop-'+i+'.webp',ac?(i?{signal:ac.signal}:{signal:ac.signal,priority:'high'}):{}).then(function(r){if(dead)return;if(!r.ok)throw new Error('http '+r.status);
-        var cl=+r.headers.get('content-length')||0;if(cl)sizes[i]=cl;u=new Uint8Array(cl||EST);
+      fetch('fig-'+NAMES[i]+'.webp',ac?(i>1?{signal:ac.signal}:{signal:ac.signal,priority:'high'}):{}).then(function(r){if(dead)return;if(!r.ok)throw new Error('http '+r.status);
+        var cl=+r.headers.get('content-length')||0;if(cl)sizes[i]=cl;u=new Uint8Array(cl||sizes[i]||1e6);
         if(r.body&&r.body.getReader){streamed=true;arm(STALL);var rd=r.body.getReader(),next=function(){return rd.read().then(function(x){if(dead){try{rd.cancel()}catch(e){}return}if(x.done)return feed(null,true);feed(x.value,false);return next()})};return next()}
         arm(120000);return r.arrayBuffer().then(function(b){if(!dead)feed(new Uint8Array(b),true)})}).then(function(){end()},function(e){end(e||new Error('load'))})})};
-    // the next bundle to load: the one the clock is in, then the ones after it
-    var order=function(){var b0=Math.floor((Math.floor(tl*30)%NF)/LPS/5),k,i;for(k=0;k<NB;k++){i=(b0+k)%NB;if(!got[i])return i}return -1};
-    var sched=function(){clearTimeout(retryT);retryT=0;if(busy>=0)return;var i=order();if(i<0)return;busy=i;curL=0;
-      fetchB(i).then(function(){busy=-1;curL=0;got[i]=1;att[i]=0;nFail=0;for(var q=0;q<NF;q++)if(!have[q]&&Math.floor(q/30)===i)got[i]=0;sched()},
-        function(){busy=-1;curL=0;att[i]=Math.min(att[i]+1,9);var none=true,q;for(q=0;q<NF;q++)if(have[q]){none=false;break}
-          if(none){if(!nFail++)fail1=Date.now();giveUp()}
+    var complete=function(i){if(!i)return !!baseBlob;for(var q=0;q<NF;q++)if(FOF[q%6]===i&&!have[q])return false;return true};
+    var sched=function(){clearTimeout(retryT);retryT=0;if(busy>=0)return;var i=-1,k;for(k=0;k<NFL;k++)if(!got[k]){i=k;break}if(i<0)return;
+      if(i>0&&vmode!=='patch')return;                                   // patches only for the fallback: the video has the motion
+      busy=i;curL=0;
+      fetchB(i).then(function(){busy=-1;curL=0;got[i]=complete(i)?1:0;att[i]=0;nFail=0;sched()},
+        function(e){busy=-1;curL=0;err(e);nRetry++;att[i]=Math.min(att[i]+1,9);
+          if(none()){if(!nFail++)fail1=Date.now();giveUp()}
           retryT=setTimeout(sched,Math.min(15000,800*Math.pow(2,att[i]-1)))})};
     var kick=function(){if(busy<0)sched()};
-    // a frame that keeps failing to decode is fetched again
-    lose=function(s){have[s]=0;blobs[s]=null;got[Math.floor(s/30)]=0;kick()};
     sched();
-    // Playback starts (and restarts after a stall) only when the frames still to come are predicted to arrive before the clock reaches them,
-    // from the measured download rate. On a slow link the picture stays still (and still follows the scroll) instead of moving and freezing in turns.
-    var rem=function(){var r=0,i;for(i=0;i<NB;i++)if(!got[i])r+=Math.max(0,(sizes[i]||EST)-(i===busy?curL:0));return r};
-    var ready=function(){var f=Math.floor(tl*30)%NF;
-      if(!(have[f]&&have[(f+1)%NF]&&have[(f+5)%NF]))return go=false;
+    if(v&&vmode!=='patch'){
+      if(reduce){[].slice.call(v.querySelectorAll('source')).forEach(function(s){v.removeChild(s)});v.removeAttribute('autoplay');try{v.pause();v.load()}catch(e){}}   // reduced motion: the still, as before
+      else{var vss=v.querySelectorAll('source');
+        v.addEventListener('playing',vChk);v.addEventListener('timeupdate',vChk);v.addEventListener('waiting',function(){nWait++});
+        v.addEventListener('ended',function(){try{v.currentTime=0}catch(e){}vPlay()});v.addEventListener('error',vBad);
+        if(vss.length)vss[vss.length-1].addEventListener('error',vBad);
+        if(v.error)vBad();else vPlay()}}
+    // The clock runs while a frame no more than 5 frames back is there for now and for 0.2 s ahead (a0 alone guarantees that).
+    // It starts (and restarts after a stall) only when the 5 fps frames still to come are predicted to arrive before the clock reaches
+    // them, from the measured download rate: on a slow link the picture stays still (and still follows the scroll) instead of moving
+    // and freezing in turns.
+    var cov=function(f){for(var d=0;d<6;d++)if(have[(f-d+NF)%NF])return true;return false},
+      drawable=function(f){for(var d=0;d<6;d++){var p=FR[(f-d+NF)%NF];if(p&&p.a.bm)return true}return false};
+    var ready=function(){var f=Math.floor(tl*30)%NF,q,k,pre,pos,sz;
+      if(!baseBM||!cov(f)||!cov((f+6)%NF))return go=false;
       if(go)return true;
-      var k=0,m=0,i;for(i=0;i<NF;i++){if(have[(f+i)%NF]){if(!m)k++}else m=i+1}
-      if(!m)return go=true;
-      return go=k>=8&&rate>0&&rem()/rate*1.2+.6<=m/30};
+      if(!drawable(f))return false;
+      if(complete(1))return go=true;
+      if(!(rate>0))return false;
+      // bytes still to come before frame q of a0 arrives (a0 is in playback order; atlases of 3 frames)
+      pre=got[0]?0:Math.max(0,(sizes[0]||6e4)-(busy===0?curL:0));sz=sizes[1]||1e6;
+      for(k=0;k<NF/6;k++){q=(f+k*6-f%6+NF)%NF;if(have[q])continue;
+        pos=(Math.floor(q/SPAN)+1)/NAT*sz-(busy===1?curL:0);
+        if((pre+pos)/rate*1.2+.6>ahead(q,f)/30)return false}
+      return go=true};
     // the camera follows its target like a critically damped spring: no jump in position or in speed
     var aim=function(){return sp},direct=false,W=5.2;
     var advance=function(dt){var tt=aim();
       if(direct||!dt){sp=tt;sv=0}
       else{var c1=sp-tt,c2=sv+W*c1,e=Math.exp(-W*dt);sp=tt+(c1+c2*dt)*e;sv=(c2-W*(c1+c2*dt))*e;if(Math.abs(sp-tt)<.0006&&Math.abs(sv)<.004){sp=tt;sv=0}}
-      sp=sp<0?0:sp>NS?NS:sp;if(!still&&ready())tl=(tl+dt)%LPS;size();render();paint()};
+      sp=sp<0?0:sp>NS?NS:sp;if(!still&&ready())tl=(tl+dt)%LPS;size();render();vPlace();paint()};
     // the next frame is requested first, so an error in one frame can never end the loop
     var tick=0,frame=function(now){raf=requestAnimationFrame(frame);tick=Date.now();var dt=last?Math.min(.1,(now-last)/1000):0;last=now;try{advance(dt)}catch(e){}};
-    var run=function(){if(!running){running=true;last=0;tick=Date.now();raf=requestAnimationFrame(frame)}},stop=function(){running=false;cancelAnimationFrame(raf)};
+    var run=function(){vRun();if(!running){running=true;lastChg=0;last=0;tick=Date.now();raf=requestAnimationFrame(frame)}},stop=function(){vStop();running=false;cancelAnimationFrame(raf)};
     var canPin=false,framed=true,box=null;try{framed=window.self!==window.top}catch(e){}
     try{canPin=!reduce&&!!track&&'IntersectionObserver' in window&&!!(window.CSS&&CSS.supports&&CSS.supports('position','sticky'))}catch(e){}
     var vpH=function(){return box?box.clientHeight:window.innerHeight},relTop=function(el){var r=el.getBoundingClientRect();return box?r.top-box.getBoundingClientRect().top:r.top},
@@ -634,17 +727,37 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
     var watch=function(){if(fio)fio.disconnect();fio=new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?run():stop()})},{root:box,rootMargin:'160px 0px'});fio.observe(film)};
     var near=function(){var r=relTop(film);return r+film.offsetHeight>-160&&r<vpH()+160};
     // back on the page (tab, app switch, bfcache): repaint (WebKit may drop a hidden canvas), resume loading and playing
-    var lc=-1,lcT=0,wake=function(){drawnS=-1;lcT=Date.now();if(started&&!document.hidden&&near())run();kick()};
+    var lc=-1,lcT=0,wake=function(){drawnS=-1;inval=true;lcT=Date.now();if(started&&!document.hidden&&near())run();kick()};
     var hooks=function(){document.addEventListener('visibilitychange',function(){hidT=Date.now();if(document.hidden)stop();else wake()});watch();
       // watchdog: whatever IntersectionObserver, rAF or timers missed, the figure on screen keeps playing
       setInterval(function(){try{if(document.hidden)return;var t=Date.now(),on=near();
-        if(on&&!running)run();else if(!on&&running)stop();else if(running&&t-tick>1500){stop();run()}
-        if(tl!==lc||!running||still){lc=tl;lcT=t}else if(t-lcT>1500&&ready()){stop();run();lcT=t}
+        if(on&&!running)run();else if(!on&&running)stop();else if(running&&t-tick>1500){nWd++;stop();run()}
+        if(tl!==lc||!running||still){lc=tl;lcT=t}else if(t-lcT>1500&&ready()){nWd++;stop();run();lcT=t}
+        if(v&&vmode!=='patch'&&!reduce){var vc=v.currentTime;
+          if(v.networkState===3&&v.readyState===0){if(++vNs>=3)vBad()}else vNs=0;                   // no source it can use
+          if(!on)vStop();
+          else{if(vc!==vT||v.paused){vT=vc;vTt=t}
+            if(!vRef&&v.readyState>=3&&(v.paused||t-vTt>1500)){nVwd++;vTt=t;vPlay()}}}
         if(busy<0&&!retryT)sched();giveUp()}catch(e){}},500)};
-    window.addEventListener('pageshow',function(e){if(e.persisted){try{if(started)watch()}catch(x){}wake()}});
+    window.addEventListener('pageshow',function(e){if(e.persisted){try{if(started)watch()}catch(x){}wake()}if(!document.hidden&&(!started||near()))vRun()});
     window.addEventListener('pagehide',function(){hidT=Date.now();stop();if(ctl)ctl.end(new Error('hide'))});        // no request left open: the page stays eligible for the bfcache
     window.addEventListener('online',function(){clearTimeout(retryT);retryT=0;kick()});
-    try{cv.addEventListener('contextrestored',function(){drawnS=-1})}catch(e){}
+    try{cv.addEventListener('contextrestored',function(){drawnS=-1});comp.addEventListener('contextrestored',function(){inval=true})}catch(e){}
+    // ?diag: a plain readout for checking on a real phone; without ?diag none of it exists
+    if(DIAG)(function(){var el=document.createElement('pre'),vw='',vn=0;
+      el.style.cssText='position:fixed;left:4px;bottom:4px;z-index:2147483647;margin:0;padding:4px 6px;background:#fff;color:#111;font:10px/1.35 ui-monospace,Menlo,Consolas,monospace;white-space:pre;pointer-events:none;border:1px solid #999;text-align:left';
+      document.body.appendChild(el);
+      var up=function(){try{var v=innerWidth+'x'+innerHeight,t=performance.now(),by=0,tot=0,i,hv=0,ev=0;if(v!==vw){if(vw)vn++;vw=v}while(chg.length&&chg[0]<t-2000)chg.shift();
+        for(i=0;i<NFL;i++){tot+=sizes[i]||0;by+=got[i]?(sizes[i]||0):(i===busy?curL:0)}for(i=0;i<NF;i++)if(have[i]){hv++;if(!(i&1))ev++}
+        el.textContent='build '+BUILD+'\ndecode '+(useBM?'createImageBitmap':'img.decode')+', base '+(baseBM?'decoded':baseBlob?'loaded':'-')+
+          '\nbytes '+Math.round(by/1e3)+' / '+Math.round(tot/1e3)+' kB, '+Math.round(rate/1e3)+' kB/s'+'\natlases '+keys.length+' decoded, '+Object.keys(AT).length+'/'+(NAT*6)+' loaded'+
+          '\nlevel '+(hv===NF?'30 fps':ev===NF/2?'15 fps':complete(1)?'5 fps':'-')+', frames '+hv+'/'+NF+', clock '+(go?'running':'held')+
+          '\nfps (2 s) '+(chg.length/2).toFixed(1)+', longest gap '+Math.round(gapMax)+' ms'+'\nwatchdog '+nWd+', retries '+nRetry+'\nerror '+(lastErr||'-')+'\n'+document.visibilityState+', viewport '+vw+', changed '+vn+vd()}catch(e){}};
+      var vd=function(){if(!v)return '\nmode '+vmode+', no video element';var q=null,bu=0,i,nm=(v.currentSrc||'').split('/').pop()||'-';try{for(i=0;i<v.buffered.length;i++)bu+=v.buffered.end(i)-v.buffered.start(i)}catch(e){}
+        try{q=v.getVideoPlaybackQuality&&v.getVideoPlaybackQuality()}catch(e){}
+        return '\nmode '+vmode+', canPlay mp4 "'+vCan('video/mp4')+'" webm "'+vCan('video/webm')+'", src '+nm+'\nready '+v.readyState+', network '+v.networkState+', buffered '+bu.toFixed(1)+' / '+(isFinite(v.duration)?v.duration.toFixed(1):'-')+' s'+
+          '\ntime '+v.currentTime.toFixed(2)+', '+(v.paused?'paused':'playing')+(q?', dropped '+q.droppedVideoFrames+' / '+q.totalVideoFrames:'')+'\nplay() rejected '+nRej+(lastRej?' ('+lastRej+')':'')+', waiting '+nWait+', video watchdog '+nVwd+', video error '+(vErr||'-')};
+      up();setInterval(up,500)})();
     var startPinned=function(){ if(started)return;started=true;scrolly=true;root.classList.add('scrolly');
       var first=true,label='',st=0,ts=NS,LEAN=.14,
         tickSeg=function(s){for(var n=0;n<segs.length;n++)if(SEGA[n]+SEGL[n]===s)(function(b){b.classList.remove('tick');void b.offsetWidth;b.classList.add('tick');setTimeout(function(){b.classList.remove('tick')},600)})(segs[n])};
@@ -660,7 +773,7 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
       skip.addEventListener('click',function(){haptic();var top=scrollY0()+relTop(track);scrollTo0(label==='replay'?top+1:top+track.offsetHeight-6)});
       segs.forEach(function(b,n){b.addEventListener('click',function(){haptic();var g=geo();if(g.tot<8){ts=SEGA[n];return}scrollTo0(scrollY0()-g.x+(SEGA[n]+.5)*g.seg)})});
       onFail=function(){aim=function(){direct=true;return 0};root.classList.remove('scrolly')};if(failed)onFail();
-      hooks();window.haFilm={geo:geo,stop0:function(){return st},advance:advance,render:render,stop:function(){stop();if(fio)fio.disconnect()},have:have,keys:keys,pos:function(){return sp},clock:function(){return tl},shown:function(){return shown},cam:function(){return camOf(sp)},go:function(){return go},rate:function(){return rate},got:got,failed:function(){return failed},loading:function(){return busy},running:function(){return running}};advance(0) };
+      hooks();window.haFilm={geo:geo,stop0:function(){return st},advance:advance,render:render,stop:function(){stop();if(fio)fio.disconnect()},have:have,keys:keys,pos:function(){return sp},clock:function(){return vmode==='video'?v.currentTime:tl},mode:function(){return vmode},video:v,shown:function(){return shown},cam:function(){return camOf(sp)},go:function(){return go},rate:function(){return rate},got:got,failed:function(){return failed},loading:function(){return busy},running:function(){return running}};advance(0) };
     // A frame as tall as the whole page cannot pin anything: give the page its own screen-sized scroll box there.
     var boxIn=function(){var sc=document.querySelector('.page-scroll');if(box||!sc)return;var h=Math.round(Math.max(520,Math.min(860,((window.screen&&(screen.availHeight||screen.height))||820)*.78)));
       root.style.setProperty('--boxh',h+'px');root.style.setProperty('--svh',(h/100)+'px');root.classList.add('boxed');box=sc;if(started)watch()};
@@ -680,7 +793,7 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
     function startAuto(){ if(started)return;started=true;var ts=NS,first=true;still=!!reduce;root.classList.add('film-auto');
       aim=function(){direct=first||still;first=false;bar=ts+1;return ts};
       segs.forEach(function(b,n){b.addEventListener('click',function(){haptic();ts=SEGA[n]})});
-      hooks();window.haFilm={advance:advance,render:render,have:have,keys:keys,pos:function(){return sp},clock:function(){return tl},shown:function(){return shown},go:function(){return go},rate:function(){return rate},got:got,failed:function(){return failed},loading:function(){return busy},running:function(){return running}};advance(0);run() } } }catch(e){}
+      hooks();window.haFilm={advance:advance,render:render,have:have,keys:keys,pos:function(){return sp},clock:function(){return vmode==='video'?v.currentTime:tl},mode:function(){return vmode},video:v,shown:function(){return shown},go:function(){return go},rate:function(){return rate},got:got,failed:function(){return failed},loading:function(){return busy},running:function(){return running}};advance(0);run() } } }catch(e){}
 
   document.querySelectorAll('.pick-btn').forEach(function(b){var m=document.getElementById(b.getAttribute('aria-controls'));
     function set(o){b.setAttribute('aria-expanded',String(o));m.hidden=!o;var x=b.closest&&b.closest('.xp');if(x)x.classList.toggle('up',o)}
