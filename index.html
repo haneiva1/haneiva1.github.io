@@ -71,7 +71,7 @@ b,strong{font-weight:600}
 .film-p{object-fit:cover;background:#fff}
 .film-c{opacity:0}
 .film.live .film-c{opacity:1}
-.film.far:not(.live) .film-p,.film:not(.live) .film-map{opacity:0!important}
+.film:not(.live) .film-map{opacity:0!important}
 .film-c{transition:opacity .2s linear}
 .film-fade{position:absolute;left:0;right:0;top:79.17%;bottom:0;background:linear-gradient(to bottom,rgba(255,255,255,0),#fff 25%);pointer-events:none}
 .film-col{position:relative;width:min(100%,470px);margin-inline:auto}
@@ -545,12 +545,18 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
     var camOf=function(s){var i=Math.min(NS-1,Math.floor(s)),w=s>=NS?1:s-i,f=F[i]+(F[i+1]-F[i])*w,o=i===NS-1?w:0,
         c0=680+300*(clamp(f)-1)+220*Math.min(1.6,Math.max(0,f-4));return{S:270-124*o,cx:540-70*o,cy:c0+(815-c0)*o,fy:(f+(3-f)*o)*1.515544,o:o}};
     // frames stay compressed; only the next few are kept decoded
-    var evict=function(f){while(keys.length>CAP){var far=-1,fd=-1,i,d;for(i=0;i<keys.length;i++){if(keys[i]===shown)continue;d=ahead(keys[i],f);if(d>fd){fd=d;far=i}}if(far<0)return;var k=keys.splice(far,1)[0],b=cache[k];delete cache[k];try{if(b.close)b.close();else{URL.revokeObjectURL(b._u);b.src=''}}catch(e){}}};
-    var decode=function(s,f){if(!have[s]||cache[s]||pend>=4)return;cache[s]=1;pend++;
-      var over=false,done=function(d){if(over){try{if(d&&d.close)d.close()}catch(e){}return}over=true;clearTimeout(tm);pend--;if(d){cache[s]=d;keys.push(s);evict(f)}else delete cache[s]},
-        tm=setTimeout(function(){useBM=false;done(null)},2500);
-      if(useBM){try{createImageBitmap(blobs[s]).then(done,function(){useBM=false;done(null)})}catch(e){useBM=false;done(null)}}
-      else{var im=new Image();im._u=URL.createObjectURL(blobs[s]);im.onload=function(){done(im)};im.onerror=function(){done(null)};im.src=im._u}};
+    var bmFail=0,okAny=false,bad=new Uint8Array(NF),lose=function(){},
+      drop=function(b){try{if(b.close)b.close();else{URL.revokeObjectURL(b._u);b.src=''}}catch(e){}};
+    var evict=function(f){while(keys.length>CAP){var far=-1,fd=-1,i,d;for(i=0;i<keys.length;i++){if(keys[i]===shown)continue;d=ahead(keys[i],f);if(d>fd){fd=d;far=i}}if(far<0)return;var k=keys.splice(far,1)[0],b=cache[k];delete cache[k];drop(b)}};
+    // every decode settles exactly once (result, error or timeout), so the pending count can never leak and block later frames
+    var decode=function(s,f){if(!have[s]||cache[s]||pend>=4)return;cache[s]=1;pend++;var bm=useBM,blob=blobs[s],im=null,over=false,
+        done=function(d){if(over){if(d)drop(d);return}over=true;clearTimeout(tm);pend--;
+          if(d){cache[s]=d;keys.push(s);bad[s]=0;okAny=true;if(bm)bmFail=0;evict(f)}else{delete cache[s];if(++bad[s]>=3){bad[s]=0;if(okAny)lose(s)}}},
+        tm=setTimeout(function(){if(bm&&++bmFail>=3)useBM=false;if(im)drop(im);done(null)},4000);
+      try{if(bm)createImageBitmap(blob).then(done,function(){useBM=false;done(null)});
+        else{im=new Image();var ok=function(){if(im.naturalWidth)done(im);else no()},no=function(){if(!over&&im.complete&&im.naturalWidth)return done(im);drop(im);done(null)};
+          im._u=URL.createObjectURL(blob);im.src=im._u;if(im.decode)im.decode().then(ok,no);else{im.onload=ok;im.onerror=no}}}
+      catch(e){if(bm)useBM=false;done(null)}};
     var size=function(){var w=film.clientWidth,h=film.clientHeight;if(!w||!h)return;var W=Math.min(1080,Math.round(w*Math.min(window.devicePixelRatio||1,3))),H=Math.round(W*h/w);if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H;drawnS=-1}};
     var render=function(){var f=Math.floor(tl*30)%NF,i,best=-1,bd=1e9,d;
       for(i=0;i<keys.length;i++){d=ahead(f,keys[i]);if(d<bd){bd=d;best=keys[i]}}                       // the decoded frame at or closest behind the clock
@@ -568,28 +574,77 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
       map.style.opacity=eio((camOf(sp).o-.6)/.4);
       segs.forEach(function(b,n){b.firstChild.style.transform='scaleX('+clamp((sb-SEGA[n])/SEGL[n])+')'})}
     var failed=false,onFail=function(){};
-    // each bundle is a WebP file (a small cover frame) that carries one second of frames in an extra RIFF chunk
-    var load=function(i,n){return fetch('loop-'+i+'.webp').then(function(r){if(!r.ok)throw 0;return r.arrayBuffer()}).then(function(buf){var dv=new DataView(buf),L=buf.byteLength,o=12,sz,c,off,j,q,len;
-      while(o+8<=L&&dv.getUint32(o,false)!==0x48414631){sz=dv.getUint32(o+4,true);o+=8+sz+(sz&1)}
-      if(o+12>L)throw 0;o+=8;c=dv.getUint32(o,true);off=o+4+c*8;
-      for(j=0;j<c;j++){q=dv.getUint32(o+4+j*8,true);len=dv.getUint32(o+8+j*8,true);blobs[q]=new Blob([buf.slice(off,off+len)],{type:'image/webp'});have[q]=1;off+=len}},
-      function(e){if((n||0)>=2)throw e;return new Promise(function(ok){setTimeout(ok,1500)}).then(function(){return load(i,(n||0)+1)})})};
-    var chain=load(0).catch(function(){failed=true;onFail();throw 0});for(var bi=1;bi<NB;bi++)chain=chain.then((function(i){return function(){return load(i)}})(bi));chain.catch(function(){});
-    var ready=function(){var f=Math.floor(tl*30)%NF;return !!(have[f]&&have[(f+1)%NF]&&have[(f+5)%NF])};    // while loading, the loop waits for its frames instead of skipping them
+    // each bundle is a WebP file (a small cover frame) that carries one second of frames in an extra RIFF chunk.
+    // Bundles are streamed one at a time in playback order: each frame is usable as soon as its bytes arrive. A bundle that fails, stalls or
+    // returns an error is retried with backoff for as long as the page is open, and at once on 'online', on return to the page and on bfcache restore.
+    var got=new Uint8Array(NB),att=new Uint8Array(NB),sizes=[],EST=1.6e6,busy=-1,curL=0,ctl=null,retryT=0,BYT=0,ACT=0,rate=0,nFail=0,fail1=0,go=false,STALL=12000,hidT=0,
+      giveUp=function(){if(!failed&&nFail>=4&&Date.now()-fail1>=15000){for(var q=0;q<NF;q++)if(have[q])return;failed=true;try{onFail()}catch(e){}}};
+    var parser=function(i){var o=12,c=-1,j=0,off=0,base=0;
+      return function(u,L,fin){var rd=function(p){return(u[p]|u[p+1]<<8|u[p+2]<<16|u[p+3]<<24)>>>0},q,len;
+        while(c<0){if(o+12>L){if(fin)throw 0;return}
+          if(u[o]===72&&u[o+1]===65&&u[o+2]===70&&u[o+3]===49){c=rd(o+8);base=o+12;off=base+c*8;if(c<1||c>NF)throw 0}else{q=rd(o+4);o+=8+q+(q&1)}}
+        if(off>L){if(fin)throw 0;return}
+        for(;j<c;j++){q=rd(base+j*8);len=rd(base+4+j*8);if(q>=NF)throw 0;if(off+len>L){if(fin)throw 0;return}
+          if(!have[q]){blobs[q]=new Blob([u.subarray(off,off+len)],{type:'image/webp'});have[q]=1}off+=len}}};
+    var fetchB=function(i){return new Promise(function(res,rej){var ac=null,dead=false,st=0,u=null,L=0,p=parser(i),tp=Date.now(),streamed=false;
+      try{ac=new AbortController()}catch(e){}
+      var end=function(e){if(dead)return;dead=true;clearTimeout(st);if(ctl&&ctl.ac===ac)ctl=null;if(e){try{if(ac)ac.abort()}catch(x){}rej(e)}else res()},
+        arm=function(ms){clearTimeout(st);st=setTimeout(function(){end(new Error('stall'))},ms)},
+        feed=function(ch,fin){if(dead)return;if(ch&&ch.length){var t=Date.now(),g=t-tp,v=hidT<tp&&!document.hidden;tp=t;if(v){BYT+=ch.length;ACT+=Math.min(g,STALL);if(ACT>250)rate=BYT/ACT*1000}
+            if(L+ch.length>u.length){var n=new Uint8Array(Math.max(L+ch.length,u.length*1.5|0));n.set(u.subarray(0,L));u=n}u.set(ch,L);L+=ch.length;curL=L}
+          p(u,L,!!fin);if(streamed&&!fin)arm(STALL)};
+      ctl={ac:ac,end:end};arm(15000);
+      fetch('loop-'+i+'.webp',ac?(i?{signal:ac.signal}:{signal:ac.signal,priority:'high'}):{}).then(function(r){if(dead)return;if(!r.ok)throw new Error('http '+r.status);
+        var cl=+r.headers.get('content-length')||0;if(cl)sizes[i]=cl;u=new Uint8Array(cl||EST);
+        if(r.body&&r.body.getReader){streamed=true;arm(STALL);var rd=r.body.getReader(),next=function(){return rd.read().then(function(x){if(dead){try{rd.cancel()}catch(e){}return}if(x.done)return feed(null,true);feed(x.value,false);return next()})};return next()}
+        arm(120000);return r.arrayBuffer().then(function(b){if(!dead)feed(new Uint8Array(b),true)})}).then(function(){end()},function(e){end(e||new Error('load'))})})};
+    // the next bundle to load: the one the clock is in, then the ones after it
+    var order=function(){var b0=Math.floor((Math.floor(tl*30)%NF)/LPS/5),k,i;for(k=0;k<NB;k++){i=(b0+k)%NB;if(!got[i])return i}return -1};
+    var sched=function(){clearTimeout(retryT);retryT=0;if(busy>=0)return;var i=order();if(i<0)return;busy=i;curL=0;
+      fetchB(i).then(function(){busy=-1;curL=0;got[i]=1;att[i]=0;nFail=0;for(var q=0;q<NF;q++)if(!have[q]&&Math.floor(q/30)===i)got[i]=0;sched()},
+        function(){busy=-1;curL=0;att[i]=Math.min(att[i]+1,9);var none=true,q;for(q=0;q<NF;q++)if(have[q]){none=false;break}
+          if(none){if(!nFail++)fail1=Date.now();giveUp()}
+          retryT=setTimeout(sched,Math.min(15000,800*Math.pow(2,att[i]-1)))})};
+    var kick=function(){if(busy<0)sched()};
+    // a frame that keeps failing to decode is fetched again
+    lose=function(s){have[s]=0;blobs[s]=null;got[Math.floor(s/30)]=0;kick()};
+    sched();
+    // Playback starts (and restarts after a stall) only when the frames still to come are predicted to arrive before the clock reaches them,
+    // from the measured download rate. On a slow link the picture stays still (and still follows the scroll) instead of moving and freezing in turns.
+    var rem=function(){var r=0,i;for(i=0;i<NB;i++)if(!got[i])r+=Math.max(0,(sizes[i]||EST)-(i===busy?curL:0));return r};
+    var ready=function(){var f=Math.floor(tl*30)%NF;
+      if(!(have[f]&&have[(f+1)%NF]&&have[(f+5)%NF]))return go=false;
+      if(go)return true;
+      var k=0,m=0,i;for(i=0;i<NF;i++){if(have[(f+i)%NF]){if(!m)k++}else m=i+1}
+      if(!m)return go=true;
+      return go=k>=8&&rate>0&&rem()/rate*1.2+.6<=m/30};
     // the camera follows its target like a critically damped spring: no jump in position or in speed
     var aim=function(){return sp},direct=false,W=5.2;
     var advance=function(dt){var tt=aim();
       if(direct||!dt){sp=tt;sv=0}
       else{var c1=sp-tt,c2=sv+W*c1,e=Math.exp(-W*dt);sp=tt+(c1+c2*dt)*e;sv=(c2-W*(c1+c2*dt))*e;if(Math.abs(sp-tt)<.0006&&Math.abs(sv)<.004){sp=tt;sv=0}}
       sp=sp<0?0:sp>NS?NS:sp;if(!still&&ready())tl=(tl+dt)%LPS;size();render();paint()};
-    var frame=function(now){var dt=last?Math.min(.1,(now-last)/1000):0;last=now;advance(dt);raf=requestAnimationFrame(frame)};
-    var run=function(){if(!running){running=true;last=0;raf=requestAnimationFrame(frame)}},stop=function(){running=false;cancelAnimationFrame(raf)};
+    // the next frame is requested first, so an error in one frame can never end the loop
+    var tick=0,frame=function(now){raf=requestAnimationFrame(frame);tick=Date.now();var dt=last?Math.min(.1,(now-last)/1000):0;last=now;try{advance(dt)}catch(e){}};
+    var run=function(){if(!running){running=true;last=0;tick=Date.now();raf=requestAnimationFrame(frame)}},stop=function(){running=false;cancelAnimationFrame(raf)};
     var canPin=false,framed=true,box=null;try{framed=window.self!==window.top}catch(e){}
     try{canPin=!reduce&&!!track&&'IntersectionObserver' in window&&!!(window.CSS&&CSS.supports&&CSS.supports('position','sticky'))}catch(e){}
     var vpH=function(){return box?box.clientHeight:window.innerHeight},relTop=function(el){var r=el.getBoundingClientRect();return box?r.top-box.getBoundingClientRect().top:r.top},
       scrollY0=function(){return box?box.scrollTop:window.pageYOffset},scrollTo0=function(y){(box||window).scrollTo({top:y,behavior:'smooth'})},scrolly=false,started=false,fio=null;
     var watch=function(){if(fio)fio.disconnect();fio=new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?run():stop()})},{root:box,rootMargin:'160px 0px'});fio.observe(film)};
-    var hooks=function(){document.addEventListener('visibilitychange',function(){if(document.hidden)stop();else{var r=relTop(film);if(r+film.offsetHeight>-160&&r<vpH()+160)run()}});watch()};
+    var near=function(){var r=relTop(film);return r+film.offsetHeight>-160&&r<vpH()+160};
+    // back on the page (tab, app switch, bfcache): repaint (WebKit may drop a hidden canvas), resume loading and playing
+    var lc=-1,lcT=0,wake=function(){drawnS=-1;lcT=Date.now();if(started&&!document.hidden&&near())run();kick()};
+    var hooks=function(){document.addEventListener('visibilitychange',function(){hidT=Date.now();if(document.hidden)stop();else wake()});watch();
+      // watchdog: whatever IntersectionObserver, rAF or timers missed, the figure on screen keeps playing
+      setInterval(function(){try{if(document.hidden)return;var t=Date.now(),on=near();
+        if(on&&!running)run();else if(!on&&running)stop();else if(running&&t-tick>1500){stop();run()}
+        if(tl!==lc||!running||still){lc=tl;lcT=t}else if(t-lcT>1500&&ready()){stop();run();lcT=t}
+        if(busy<0&&!retryT)sched();giveUp()}catch(e){}},500)};
+    window.addEventListener('pageshow',function(e){if(e.persisted){try{if(started)watch()}catch(x){}wake()}});
+    window.addEventListener('pagehide',function(){hidT=Date.now();stop();if(ctl)ctl.end(new Error('hide'))});        // no request left open: the page stays eligible for the bfcache
+    window.addEventListener('online',function(){clearTimeout(retryT);retryT=0;kick()});
+    try{cv.addEventListener('contextrestored',function(){drawnS=-1})}catch(e){}
     var startPinned=function(){ if(started)return;started=true;scrolly=true;root.classList.add('scrolly');
       var first=true,label='',st=0,ts=NS,LEAN=.14,
         tickSeg=function(s){for(var n=0;n<segs.length;n++)if(SEGA[n]+SEGL[n]===s)(function(b){b.classList.remove('tick');void b.offsetWidth;b.classList.add('tick');setTimeout(function(){b.classList.remove('tick')},600)})(segs[n])};
@@ -605,7 +660,7 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
       skip.addEventListener('click',function(){haptic();var top=scrollY0()+relTop(track);scrollTo0(label==='replay'?top+1:top+track.offsetHeight-6)});
       segs.forEach(function(b,n){b.addEventListener('click',function(){haptic();var g=geo();if(g.tot<8){ts=SEGA[n];return}scrollTo0(scrollY0()-g.x+(SEGA[n]+.5)*g.seg)})});
       onFail=function(){aim=function(){direct=true;return 0};root.classList.remove('scrolly')};if(failed)onFail();
-      hooks();window.haFilm={geo:geo,stop0:function(){return st},advance:advance,render:render,stop:function(){stop();if(fio)fio.disconnect()},have:have,keys:keys,pos:function(){return sp},clock:function(){return tl},shown:function(){return shown},cam:function(){return camOf(sp)}};advance(0) };
+      hooks();window.haFilm={geo:geo,stop0:function(){return st},advance:advance,render:render,stop:function(){stop();if(fio)fio.disconnect()},have:have,keys:keys,pos:function(){return sp},clock:function(){return tl},shown:function(){return shown},cam:function(){return camOf(sp)},go:function(){return go},rate:function(){return rate},got:got,failed:function(){return failed},loading:function(){return busy},running:function(){return running}};advance(0) };
     // A frame as tall as the whole page cannot pin anything: give the page its own screen-sized scroll box there.
     var boxIn=function(){var sc=document.querySelector('.page-scroll');if(box||!sc)return;var h=Math.round(Math.max(520,Math.min(860,((window.screen&&(screen.availHeight||screen.height))||820)*.78)));
       root.style.setProperty('--boxh',h+'px');root.style.setProperty('--svh',(h/100)+'px');root.classList.add('boxed');box=sc;if(started)watch()};
@@ -625,7 +680,7 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
     function startAuto(){ if(started)return;started=true;var ts=NS,first=true;still=!!reduce;root.classList.add('film-auto');
       aim=function(){direct=first||still;first=false;bar=ts+1;return ts};
       segs.forEach(function(b,n){b.addEventListener('click',function(){haptic();ts=SEGA[n]})});
-      hooks();window.haFilm={advance:advance,render:render,have:have,keys:keys,pos:function(){return sp},clock:function(){return tl},shown:function(){return shown}};advance(0);run() } } }catch(e){}
+      hooks();window.haFilm={advance:advance,render:render,have:have,keys:keys,pos:function(){return sp},clock:function(){return tl},shown:function(){return shown},go:function(){return go},rate:function(){return rate},got:got,failed:function(){return failed},loading:function(){return busy},running:function(){return running}};advance(0);run() } } }catch(e){}
 
   document.querySelectorAll('.pick-btn').forEach(function(b){var m=document.getElementById(b.getAttribute('aria-controls'));
     function set(o){b.setAttribute('aria-expanded',String(o));m.hidden=!o;var x=b.closest&&b.closest('.xp');if(x)x.classList.toggle('up',o)}
