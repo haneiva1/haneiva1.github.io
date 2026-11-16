@@ -34,7 +34,7 @@ a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%;height:auto}
 button{font:inherit;color:inherit}
 b,strong{font-weight:600}
-:root:not([data-lang="en"]) [lang="en"]:not([data-keep]){display:none!important}
+:root:not([data-lang="en"]) [lang="en"]{display:none!important}
 :root[data-lang="en"] [lang="es"]{display:none!important}
 :focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:4px}
 .page{max-width:764px;margin:0 auto;padding:0 max(22px,env(safe-area-inset-left,0px))}
@@ -92,7 +92,7 @@ b,strong{font-weight:600}
 .film-k i:empty{margin-right:0}
 .film-s{margin-top:1.7%;font:500 13.5px/1.36 var(--f);font-size:clamp(12.5px,3.43cqw,17px);color:var(--ink);letter-spacing:-.004em;text-wrap:pretty}
 .film-map{position:absolute;inset:0;margin:0;padding:0;list-style:none;opacity:0;pointer-events:none}
-.film-map li{position:absolute;left:69.57%;transform:translateY(-50%);white-space:nowrap;font:400 9px/1 var(--mono);font-size:clamp(6.7px,2.4cqw,11px);color:var(--ink)}
+.film-map li{position:absolute;left:69.57%;transform:translateY(-50%);white-space:nowrap;font:400 9px/1 var(--mono);font-size:clamp(5.4px,2.4cqw,11px);color:var(--ink)}
 .film-map i{font-style:normal;color:var(--faint);margin-right:.65em}
 .film-bar button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .film-bar{display:flex;gap:3px;width:100%;margin:10px 0 0}
@@ -364,7 +364,8 @@ main,.roles{transition:opacity .24s linear}
   .scrolly .film-head{display:none}
 }
 /* a very narrow film (phones 320 px wide): the caption gets a little more room so its third line is not cut */
-@container (max-width:270px){.film-cap{top:83.4%}.film-s{font-size:11.5px;line-height:1.3}}
+@container (max-width:306px){.film-cap{top:83.4%}}
+@container (max-width:270px){.film-s{font-size:11.5px;line-height:1.3}}
 
 </style>
 <script>(function(){var d=document.documentElement,l=document.getElementById('gf'),done=false,go=function(){d.classList.add('ready')},
@@ -396,13 +397,13 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
     <section class="sec how" id="como-trabajo">
       <div class="sh"><h2><span lang="es">Cómo trabajo</span><span lang="en">How I work</span></h2></div>
       <div class="film-track"><div class="film-pin"><div class="film-col">
-        <div class="film-head"><span class="film-hint" aria-hidden="true">Scroll to advance</span><button class="film-skip" type="button">Skip</button></div>
+        <div class="film-head"><span class="film-hint" aria-hidden="true"><span lang="es">Baja para avanzar</span><span lang="en">Scroll to advance</span></span><button class="film-skip" type="button"><span lang="es">Saltar</span><span lang="en">Skip</span></button></div>
       <div class="film">
-        <img class="film-p" src="figura-poster.jpg" width="1080" height="1920" alt="Animated diagram of the development method, in seven levels: requirements, contract, context and rules, parallel agents, verification, review and production">
+        <img class="film-p" src="figura-poster.jpg" width="1080" height="1920" data-alt-es="Diagrama animado del método de desarrollo, en siete niveles: requisitos, contrato, contexto y reglas, agentes paralelos, verificación, revisión y producción" data-alt-en="Animated diagram of the development method, in seven levels: requirements, contract, context and rules, parallel agents, verification, review and production" alt="Diagrama animado del método de desarrollo, en siete niveles: requisitos, contrato, contexto y reglas, agentes paralelos, verificación, revisión y producción">
         <canvas class="film-c" aria-hidden="true"></canvas>
         <div class="film-fade" aria-hidden="true"></div>
-        <ol class="film-map" aria-hidden="true"><li style="top:6.95%"><i>01</i>requirements</li><li style="top:18.5%"><i>02</i>contract</li><li style="top:30.0%"><i>03</i>context and rules</li><li style="top:41.5%"><i>04</i>parallel agents</li><li style="top:53.05%"><i>05</i>verification</li><li style="top:64.6%"><i>06</i>review</li><li style="top:76.1%"><i>07</i>production</li></ol>
-        <div class="film-cap" lang="en" data-keep><p class="film-k"><i>01</i><b>requirements</b></p><p class="film-s">Work starts as unstructured input.</p></div>
+        <ol class="film-map" aria-hidden="true"><li style="top:6.95%"><i>01</i><span lang="es">requisitos</span><span lang="en">requirements</span></li><li style="top:18.5%"><i>02</i><span lang="es">contrato</span><span lang="en">contract</span></li><li style="top:30.0%"><i>03</i><span lang="es">contexto y reglas</span><span lang="en">context and rules</span></li><li style="top:41.5%"><i>04</i><span lang="es">agentes paralelos</span><span lang="en">parallel agents</span></li><li style="top:53.05%"><i>05</i><span lang="es">verificación</span><span lang="en">verification</span></li><li style="top:64.6%"><i>06</i><span lang="es">revisión</span><span lang="en">review</span></li><li style="top:76.1%"><i>07</i><span lang="es">producción</span><span lang="en">production</span></li></ol>
+        <div class="film-cap"><p class="film-k"><i>01</i><b><span lang="es">requisitos</span><span lang="en">requirements</span></b></p><p class="film-s"><span lang="es">El trabajo empieza como información sin estructura.</span><span lang="en">Work starts as unstructured input.</span></p></div>
       </div>
       <div class="film-bar" role="group" aria-label="Stages"><button type="button" style="--w:1" aria-label="Go to requirements"><i></i></button><button type="button" style="--w:1" aria-label="Go to contract"><i></i></button><button type="button" style="--w:1" aria-label="Go to context and rules"><i></i></button><button type="button" style="--w:1" aria-label="Go to parallel agents"><i></i></button><button type="button" style="--w:2" aria-label="Go to verification"><i></i></button><button type="button" style="--w:1" aria-label="Go to review"><i></i></button><button type="button" style="--w:1" aria-label="Go to production"><i></i></button><button type="button" style="--w:1" aria-label="Go to system"><i></i></button></div>
       </div></div></div>
@@ -506,7 +507,8 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
   try{document.addEventListener('touchstart',function(){},{passive:true})}catch(e){}                      // lets :active answer the finger on iOS
   var lg=document.querySelector('.lang'),pill=function(l){if(lg)lg.style.setProperty('--lx',l==='en'?'1':'0');
     document.querySelectorAll('.lang button').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.set===l))})};
-  function setLang(l){root.setAttribute('data-lang',l);root.lang=l;pill(l);
+  var relabel=function(){};      // the figure's own texts follow the page language
+  function setLang(l){root.setAttribute('data-lang',l);root.lang=l;pill(l);relabel();
     document.querySelectorAll('[data-alt-es]').forEach(function(i){i.alt=i.getAttribute('data-alt-'+l)});
     try{localStorage.setItem('ha-lang',l)}catch(e){}}
   var saved=null;try{saved=localStorage.getItem('ha-lang')}catch(e){}
@@ -534,7 +536,10 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
       F=[.07,1.03,2.02,3.03,4.03,3.5,5.02,5.53,5.53],SEGA=[0,1,2,3,4,6,7,8],SEGL=[1,1,1,1,2,1,1,1],
       cur=0,raf=0,last=0,tl=0,sp=0,sv=0,bar=0,shown=-1,drawnS=-1,painted=-1,pend=0,running=false,still=false,
       blobs=new Array(NF),have=new Uint8Array(NF),cache={},keys=[],useBM=typeof createImageBitmap==='function',
-      CAPS=[['01','requirements','Work starts as unstructured input.'],['02','contract','Acceptance criteria are written first. Each one becomes a test before any code exists.'],['03','context and rules','Repository rules constrain every agent. Each past failure added one.'],['04','parallel agents','Agents work in isolated environments and run the app before handing off.'],['05','verification','Three gates: automated tests, an evaluator agent that did not write the code, and evals.'],['05','verification','A failed change returns to its agent and adds a rule upstream.'],['06','review','I review every change that clears the three gates.'],['07','production','Production signals feed back as new requirements.'],['','system','Two feedback loops: one fixes the change, the other hardens the system.']];
+      CAPS={en:[['01','requirements','Work starts as unstructured input.'],['02','contract','Acceptance criteria are written first. Each one becomes a test before any code exists.'],['03','context and rules','Repository rules constrain every agent. Each past failure added one.'],['04','parallel agents','Agents work in isolated environments and run the app before handing off.'],['05','verification','Three gates: automated tests, an evaluator agent that did not write the code, and evals.'],['05','verification','A failed change returns to its agent and adds a rule upstream.'],['06','review','I review every change that clears the three gates.'],['07','production','Production signals feed back as new requirements.'],['','system','Two feedback loops: one fixes the change, the other hardens the system.']],
+        es:[['01','requisitos','El trabajo empieza como información sin estructura.'],['02','contrato','Los criterios de aceptación se escriben primero. Cada uno se vuelve una prueba antes del código.'],['03','contexto y reglas','Las reglas del repositorio limitan a cada agente. Cada falla pasada agregó una.'],['04','agentes paralelos','Los agentes trabajan en entornos aislados y ejecutan la aplicación antes de entregar.'],['05','verificación','Tres controles: pruebas automatizadas, un agente evaluador que no escribió el código y evals.'],['05','verificación','Un cambio que falla vuelve a su agente y agrega una regla más arriba.'],['06','revisión','Reviso cada cambio que pasa los tres controles.'],['07','producción','Las señales de producción vuelven como nuevos requisitos.'],['','sistema','Dos ciclos de retroalimentación: uno corrige el cambio y el otro refuerza el sistema.']]},
+      UI={en:{skip:'Skip',replay:'Replay',go:'Go to ',bar:'Stages'},es:{skip:'Saltar',replay:'Repetir',go:'Ir a ',bar:'Etapas'}},
+      lng=function(){return root.getAttribute('data-lang')==='en'?'en':'es'};
     var clamp=function(x){return x<0?0:x>1?1:x},eio=function(u){u=clamp(u);return u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2},ahead=function(k,f){return((k-f)%NF+NF)%NF};
     // camera for a stop position s (0 = first level … NS = whole system), as the film's own camera would frame it
     var camOf=function(s){var i=Math.min(NS-1,Math.floor(s)),w=s>=NS?1:s-i,f=F[i]+(F[i+1]-F[i])*w,o=i===NS-1?w:0,
@@ -553,7 +558,11 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
           x0=Math.max(0,sx),y0=Math.max(0,sy),x1=Math.min(MW,sx+sw),y1=Math.min(MH,sy+sh);
         try{ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);if(x1>x0&&y1>y0)ctx.drawImage(cache[best],x0,y0,x1-x0,y1-y0,(x0-sx)/sw*W,(y0-sy)/sh*H,(x1-x0)/sw*W,(y1-y0)/sh*H);shown=best;drawnS=sp;film.classList.add('live')}catch(e){}}
       for(i=0;i<6;i++)decode((f+i)%NF,f)};
-    function setCap(i){kn.textContent=CAPS[i][0];kt.textContent=CAPS[i][1];ks.textContent=CAPS[i][2]}
+    function setCap(i){var c=CAPS[lng()][i];kn.textContent=c[0];kt.textContent=c[1];ks.textContent=c[2]}
+    var skipKey='',fbar=document.querySelector('.film-bar');
+    relabel=function(){var L=lng(),u=UI[L];setCap(cur);if(skipKey)skip.textContent=u[skipKey];if(fbar)fbar.setAttribute('aria-label',u.bar);
+      segs.forEach(function(b,n){b.setAttribute('aria-label',u.go+CAPS[L][SEGA[n]][1])})};
+    relabel();
     function paint(){var key=sp*16+bar;if(key===painted)return;painted=key;film.classList.toggle('far',sp>.25);var ci=Math.min(NS,Math.round(sp)),sb=bar;
       if(ci!==cur){film.style.setProperty('--dir',ci>cur?1:-1);cur=ci;film.classList.add('swap');setTimeout(function(){setCap(cur);film.classList.add('pre');film.classList.remove('swap');void film.offsetWidth;film.classList.remove('pre')},190)}
       map.style.opacity=eio((camOf(sp).o-.6)/.4);
@@ -589,11 +598,11 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
       aim=function(){var g=geo(),r=Math.max(0,Math.min(NS+1,g.x/g.seg)),l,ns;
         if(g.tot<8){direct=first;first=false;bar=ts+1;return ts}                       // not pinned at this size: the whole system, and the stage bar moves the camera
         if(first||r>=st+1.03||r<st-.03){ns=Math.max(0,Math.min(NS,Math.floor(r)));if(!first&&ns===st+1)tickSeg(ns);st=ns}
-        direct=first;first=false;bar=r;l=st>=NS?'Replay':'Skip';
-        if(l!==label){label=l;skip.textContent=l}hint.classList.toggle('on',st===0);
+        direct=first;first=false;bar=r;l=st>=NS?'replay':'skip';
+        if(l!==label){label=skipKey=l;skip.textContent=UI[lng()][l]}hint.classList.toggle('on',st===0);
         // inside a stage the picture leans with the scroll, so the finger always moves something; past the stage's end the spring carries it on
         return Math.max(0,Math.min(NS,st+LEAN*(2*clamp(r-st)-1)))};
-      skip.addEventListener('click',function(){haptic();var top=scrollY0()+relTop(track);scrollTo0(label==='Replay'?top+1:top+track.offsetHeight-6)});
+      skip.addEventListener('click',function(){haptic();var top=scrollY0()+relTop(track);scrollTo0(label==='replay'?top+1:top+track.offsetHeight-6)});
       segs.forEach(function(b,n){b.addEventListener('click',function(){haptic();var g=geo();if(g.tot<8){ts=SEGA[n];return}scrollTo0(scrollY0()-g.x+(SEGA[n]+.5)*g.seg)})});
       onFail=function(){aim=function(){direct=true;return 0};root.classList.remove('scrolly')};if(failed)onFail();
       hooks();window.haFilm={geo:geo,stop0:function(){return st},advance:advance,render:render,stop:function(){stop();if(fio)fio.disconnect()},have:have,keys:keys,pos:function(){return sp},clock:function(){return tl},shown:function(){return shown},cam:function(){return camOf(sp)}};advance(0) };
