@@ -34,7 +34,7 @@ a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%;height:auto}
 button{font:inherit;color:inherit}
 b,strong{font-weight:600}
-:root:not([data-lang="en"]) [lang="en"]{display:none!important}
+:root:not([data-lang="en"]) [lang="en"]:not([data-keep]){display:none!important}
 :root[data-lang="en"] [lang="es"]{display:none!important}
 :focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:4px}
 .page{max-width:764px;margin:0 auto;padding:0 max(22px,env(safe-area-inset-left,0px))}
@@ -356,6 +356,15 @@ main,.roles{transition:opacity .24s linear}
   .sheet-top{padding:22px 26px 14px;touch-action:auto}
   .sheet-body{padding:8px 26px 30px}
 }
+/* a screen too short to hold the pinned figure (a phone on its side): the figure sits in the page, whole, and the stage bar moves the camera */
+@media (max-height:499px){
+  .scrolly .film-track{height:auto}
+  .scrolly .film-pin{position:static;height:auto;display:block}
+  .scrolly .film-col{width:min(100%,470px);transform:none}
+  .scrolly .film-head{display:none}
+}
+/* a very narrow film (phones 320 px wide): the caption gets a little more room so its third line is not cut */
+@container (max-width:270px){.film-cap{top:83.4%}.film-s{font-size:11.5px;line-height:1.3}}
 
 </style>
 <script>(function(){var d=document.documentElement,l=document.getElementById('gf'),done=false,go=function(){d.classList.add('ready')},
@@ -393,7 +402,7 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
         <canvas class="film-c" aria-hidden="true"></canvas>
         <div class="film-fade" aria-hidden="true"></div>
         <ol class="film-map" aria-hidden="true"><li style="top:6.95%"><i>01</i>requirements</li><li style="top:18.5%"><i>02</i>contract</li><li style="top:30.0%"><i>03</i>context and rules</li><li style="top:41.5%"><i>04</i>parallel agents</li><li style="top:53.05%"><i>05</i>verification</li><li style="top:64.6%"><i>06</i>review</li><li style="top:76.1%"><i>07</i>production</li></ol>
-        <div class="film-cap" lang="en"><p class="film-k"><i>01</i><b>requirements</b></p><p class="film-s">Work starts as unstructured input.</p></div>
+        <div class="film-cap" lang="en" data-keep><p class="film-k"><i>01</i><b>requirements</b></p><p class="film-s">Work starts as unstructured input.</p></div>
       </div>
       <div class="film-bar" role="group" aria-label="Stages"><button type="button" style="--w:1" aria-label="Go to requirements"><i></i></button><button type="button" style="--w:1" aria-label="Go to contract"><i></i></button><button type="button" style="--w:1" aria-label="Go to context and rules"><i></i></button><button type="button" style="--w:1" aria-label="Go to parallel agents"><i></i></button><button type="button" style="--w:2" aria-label="Go to verification"><i></i></button><button type="button" style="--w:1" aria-label="Go to review"><i></i></button><button type="button" style="--w:1" aria-label="Go to production"><i></i></button><button type="button" style="--w:1" aria-label="Go to system"><i></i></button></div>
       </div></div></div>
@@ -573,18 +582,19 @@ if(l.sheet)faces();else{l.addEventListener('load',faces);l.addEventListener('err
     var watch=function(){if(fio)fio.disconnect();fio=new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?run():stop()})},{root:box,rootMargin:'160px 0px'});fio.observe(film)};
     var hooks=function(){document.addEventListener('visibilitychange',function(){if(document.hidden)stop();else{var r=relTop(film);if(r+film.offsetHeight>-160&&r<vpH()+160)run()}});watch()};
     var startPinned=function(){ if(started)return;started=true;scrolly=true;root.classList.add('scrolly');
-      var first=true,label='',st=0,LEAN=.14,
+      var first=true,label='',st=0,ts=NS,LEAN=.14,
         tickSeg=function(s){for(var n=0;n<segs.length;n++)if(SEGA[n]+SEGL[n]===s)(function(b){b.classList.remove('tick');void b.offsetWidth;b.classList.add('tick');setTimeout(function(){b.classList.remove('tick')},600)})(segs[n])};
       // nine equal scroll spans, one per stop. Scrolling fills the stage's bar; when a span ends, the camera moves on to the next stop.
       var geo=function(){var tot=Math.max(1,track.offsetHeight-(pin.offsetHeight||vpH()));return{x:-relTop(track),tot:tot,seg:tot/(NS+1)}};
       aim=function(){var g=geo(),r=Math.max(0,Math.min(NS+1,g.x/g.seg)),l,ns;
+        if(g.tot<8){direct=first;first=false;bar=ts+1;return ts}                       // not pinned at this size: the whole system, and the stage bar moves the camera
         if(first||r>=st+1.03||r<st-.03){ns=Math.max(0,Math.min(NS,Math.floor(r)));if(!first&&ns===st+1)tickSeg(ns);st=ns}
         direct=first;first=false;bar=r;l=st>=NS?'Replay':'Skip';
         if(l!==label){label=l;skip.textContent=l}hint.classList.toggle('on',st===0);
         // inside a stage the picture leans with the scroll, so the finger always moves something; past the stage's end the spring carries it on
         return Math.max(0,Math.min(NS,st+LEAN*(2*clamp(r-st)-1)))};
       skip.addEventListener('click',function(){haptic();var top=scrollY0()+relTop(track);scrollTo0(label==='Replay'?top+1:top+track.offsetHeight-6)});
-      segs.forEach(function(b,n){b.addEventListener('click',function(){haptic();var g=geo();scrollTo0(scrollY0()-g.x+(SEGA[n]+.5)*g.seg)})});
+      segs.forEach(function(b,n){b.addEventListener('click',function(){haptic();var g=geo();if(g.tot<8){ts=SEGA[n];return}scrollTo0(scrollY0()-g.x+(SEGA[n]+.5)*g.seg)})});
       onFail=function(){aim=function(){direct=true;return 0};root.classList.remove('scrolly')};if(failed)onFail();
       hooks();window.haFilm={geo:geo,stop0:function(){return st},advance:advance,render:render,stop:function(){stop();if(fio)fio.disconnect()},have:have,keys:keys,pos:function(){return sp},clock:function(){return tl},shown:function(){return shown},cam:function(){return camOf(sp)}};advance(0) };
     // A frame as tall as the whole page cannot pin anything: give the page its own screen-sized scroll box there.
